@@ -27,17 +27,24 @@ enumerate physical devices
 #include <util_init.hpp>
 
 int sample_main(int argc, char *argv[]) {
+    // Stores all our state
     struct sample_info info = {};
     init_global_layer_properties(info);
+    // Everything from 01, stored in info
     init_instance(info, "vulkansamples_enumerate");
 
     /* VULKAN_KEY_START */
 
     uint32_t gpu_count = 1;
+    // Returns the number of physical devices available via gpu_count
     VkResult U_ASSERT_ONLY res = vkEnumeratePhysicalDevices(info.inst, &gpu_count, NULL);
+    // We should have at least 1 GPU available
     assert(gpu_count);
+    // Allocate space for the number of devices we have
     info.gpus.resize(gpu_count);
+    // Now pull info about the devices into our info object
     res = vkEnumeratePhysicalDevices(info.inst, &gpu_count, info.gpus.data());
+    // We should be good
     assert(!res && gpu_count >= 1);
 
     /* VULKAN_KEY_END */
